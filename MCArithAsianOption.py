@@ -2,7 +2,9 @@
 class MCArithAsianOption:
     def __init__(self, type='call'):
         self.type = type
-# new branch
+
+    def showType(self):
+        print(self.type)
 
 
 
