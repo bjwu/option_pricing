@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28e55b8f-a9f5-486f-ae79-88be5e99dc82" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="28e55b8f-a9f5-486f-ae79-88be5e99dc82" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +52,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -143,7 +141,7 @@
       <option name="presentableId" value="Default" />
       <updated>1554121923575</updated>
       <workItem from="1554121927253" duration="600000" />
-      <workItem from="1554123829846" duration="576000" />
+      <workItem from="1554123829846" duration="632000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1554124045568</created>
@@ -152,15 +150,21 @@
       <option name="project" value="LOCAL" />
       <updated>1554124045568</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="test">
+      <created>1554124417810</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1554124417810</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1176000" />
+    <option name="totallyTimeSpent" value="1232000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1536" height="864" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24763194" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
