@@ -12,7 +12,7 @@ class CFGeoAsianOption:
         pass
 
 
-class CFGeoBasketOpton:
+class CFGeoBasketOption:
 
     def __init__(self, s0_1=None, s0_2=None, sigma_1=None, sigma_2=None,
                  r=0, T=0, K=None, rho=None, option_type=None):

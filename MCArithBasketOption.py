@@ -5,10 +5,10 @@ For the arithmetic mean basket options, we only need to consider a basket with t
 """
 from scipy.stats import norm
 import numpy as np
-from CFGeoOption import CFGeoBasketOpton
+from CFGeoOption import CFGeoBasketOption
 
 
-class MCArithBasketOption(CFGeoBasketOpton):
+class MCArithBasketOption(CFGeoBasketOption):
     """
     Args:
         s0_1: Origin asset1 price
@@ -26,7 +26,7 @@ class MCArithBasketOption(CFGeoBasketOpton):
                  r=0, T=0, K=None, rho=None, option_type=None, n=0,
                  ctrl_var=False):
 
-        CFGeoBasketOpton.__init__(self, s0_1, s0_2, sigma_1, sigma_2, r, T,
+        CFGeoBasketOption.__init__(self, s0_1, s0_2, sigma_1, sigma_2, r, T,
                                     K, rho, option_type)
         self.n = n
         self.ctrl_var = ctrl_var
