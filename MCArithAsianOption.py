@@ -19,7 +19,7 @@ class MCArithAsianOption:
         ctrl_var: Using control variate or not
     """
     def __init__(self, s0=None, sigma=None, r=0, T=0, K=None,
-                 n=0, option_type=None, ctrl_var=False ):
+                 n=0, option_type=None, ctrl_var=False):
 
         assert option_type == 'call' or option_type == 'put'
         self.s0 = s0
