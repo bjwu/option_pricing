@@ -76,7 +76,7 @@ class MCArithAsianOption:
             geoPayoff[i] = np.exp(-self.r*self.T) * max(geoMean-self.K, 0)
 
             if i % 50 == 0:
-                print('[INFO]The {}th random variables have been generated.'.format(i))
+                print('[INFO] The {}th random variables have been generated.'.format(i))
 
         ### Standard Mente Carlo
         Pmean = np.mean(arithPayoff)
@@ -108,7 +108,7 @@ class MCArithAsianOption:
 
 
 if __name__ == '__main__':
-    option = MCArithAsianOption(s0=100, sigma=0.3, r=0.05, T=3, K=500,
-                 n=100000, option_type='put', ctrl_var=False)
+    option = MCArithAsianOption(s0=100, sigma=0.3, r=0.05, T=3, K=100,
+                 n=100000, option_type='put', ctrl_var=True)
     option.pricing(num_randoms=100)
 
