@@ -2,7 +2,7 @@
 
 COMP7405 Assignment 3 in HKU
 
-Author: WU, ZAHNG, XUE
+Authors: WU, ZAHNG, XUE 
 
 Completed tasks:
 
