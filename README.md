@@ -6,6 +6,8 @@ Authors: WU, ZAHNG, XUE
 
 Completed tasks:
 
+* Implement Black-Scholes Formulas for European call/put option.
+
 * Implement the Monte Carlo method with control variate technique for arithmetic Asian call/put options.
 
 * Implement the Monte Carlo method with control variate technique for arithmetic mean basket call/put options.

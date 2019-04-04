@@ -23,7 +23,7 @@ class MCArithBasketOption(CFGeoBasketOption):
         ctrl_var: Using control variate or not
     """
     def __init__(self, s0_1=None, s0_2=None, sigma_1=None, sigma_2=None,
-                 r=0, T=0, K=None, rho=None, option_type=None, n=0,
+                 r=0, T=0, K=None, rho=None, option_type=None, n=100000,
                  ctrl_var=False):
 
         CFGeoBasketOption.__init__(self, s0_1, s0_2, sigma_1, sigma_2, r, T,
@@ -36,7 +36,7 @@ class MCArithBasketOption(CFGeoBasketOption):
     Args:
         num_randoms: The number of random variable in Mente Carlo Process
     """
-    def pricing(self, num_randoms=1000):
+    def pricing(self, num_randoms=50):
 
         n = self.n
         dt = self.T / n
@@ -127,5 +127,5 @@ if __name__ == '__main__':
     option = MCArithBasketOption(s0_1=100, s0_2=100, sigma_1=0.3, sigma_2=0.3,
                  r=0.05, T=3, K=100, rho=0.5, option_type='put', n=100000,
                  ctrl_var=False)
-    option.pricing(num_randoms=1000)
+    option.pricing(num_randoms=50)
 

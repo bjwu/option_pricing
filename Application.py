@@ -370,9 +370,9 @@ class Application:
         self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
 
         option = MCArithAsianOption(s0=self.s0.get(), sigma=self.sigma.get(), r=self.r.get(),
-                                    T=self.T.get(), K=self.K.get(), n=self.n.get(),
+                                    T=self.T.get(), K=self.K.get(),
                                     option_type=self.option_type.get(), ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=100)
+        result = option.pricing(num_randoms=self.n.get())
         self.logs.insert(END, "The result: {}\n".format(result))
 
     def run_task5(self):
@@ -381,9 +381,9 @@ class Application:
 
         option = MCArithBasketOption(s0_1=self.s0_1.get() ,s0_2=self.s0_2.get(), sigma_1=self.sigma_1.get(),
                                      sigma_2=self.sigma_2.get(), r=self.r.get(), T=self.T.get(), K=self.K.get(),
-                                     rho=self.rho.get(), n=self.n.get(),option_type=self.option_type.get(),
+                                     rho=self.rho.get(),option_type=self.option_type.get(),
                                      ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=100)
+        result = option.pricing(num_randoms=self.n.get())
         self.logs.insert(END, "The result: {}\n".format(result))
         
     def Quit(self):

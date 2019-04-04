@@ -19,7 +19,7 @@ class MCArithAsianOption:
         ctrl_var: Using control variate or not
     """
     def __init__(self, s0=None, sigma=None, r=0, T=0, K=None,
-                 n=0, option_type=None, ctrl_var=False):
+                 n=100000, option_type=None, ctrl_var=False):
 
         assert option_type == 'call' or option_type == 'put'
         self.s0 = s0
@@ -35,7 +35,7 @@ class MCArithAsianOption:
     Args:
         num_randoms: The number of random variable in Mente Carlo Process
     """
-    def pricing(self, num_randoms=1000):
+    def pricing(self, num_randoms=50):
 
         n = self.n
         dt = self.T / n
@@ -104,11 +104,12 @@ class MCArithAsianOption:
             Zstd = np.std(Z)
             confmc = (Zmean-1.96 * Zstd / np.sqrt(num_randoms), Zmean+1.96*Zstd/np.sqrt(num_randoms))
             print('The {} option price using Mente Carlo WITH control variate is {}'.format(self.option_type, Zmean))
+            print(geo_call, Zmean, Zstd, np.mean(geoPayoff))
             return Zmean
 
 
 if __name__ == '__main__':
     option = MCArithAsianOption(s0=100, sigma=0.3, r=0.05, T=3, K=100,
                  n=100000, option_type='put', ctrl_var=True)
-    option.pricing(num_randoms=100)
+    option.pricing(num_randoms=50)
 
