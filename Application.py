@@ -3,16 +3,18 @@ A graphical user interface for users to easily price various options with your p
 """
 
 from tkinter import *
+from tkinter import ttk
 from tkinter import scrolledtext
 from MCArithAsianOption import MCArithAsianOption
 from MCArithBasketOption import MCArithBasketOption
 
 
 class Application:
+    
     def __init__(self):
         self.window = Tk()
-        self.window.title("Option Pricing")
-        self.window.geometry('%dx%d' % (600, 400))
+        self.window.title("Mini Option Pricer")
+        self.window.geometry('%dx%d' % (700, 400))
         self.menubar = Menu(self.window)
 
         self.__createPage()
@@ -22,6 +24,7 @@ class Application:
         self.window.mainloop()
 
     def __createPage(self):
+        
         self.frame1 = Frame(self.window)
         self.frame2 = Frame(self.window)
         self.frame3 = Frame(self.window)
@@ -30,13 +33,18 @@ class Application:
         self.frame6 = Frame(self.window)
 
     def __createMenu(self):
+        
         filemenu = Menu(self.menubar, tearoff=0)
-        self.menubar.add_cascade(label='Method', menu=filemenu)
-        filemenu.add_command(label="Task 4", command=self.task4)
-        filemenu.add_command(label="Task 5", command=self.task5)
+        self.menubar.add_cascade(label='Select Pricing Type', menu=filemenu)
+        filemenu.add_command(label="Type 1: European Options - Black-Scholes Formulas", command=self.task1)
+        filemenu.add_command(label="Type 2: Implied volatility - European Options", command=self.task4)
+        filemenu.add_command(label="Type 3: Geometric Asian Options & Geometric Basket Options - Closed-Form Formulas", command=self.task4)
+        filemenu.add_command(label="Type 4: Arithmetic Asian Options - Monte Carlo Method", command=self.task4)
+        filemenu.add_command(label="Type 5: Arithmetic Mean Basket Options - Monte Carlo Method", command=self.task5)
 
     # For switching page, forget the current page and jump to another page
     def __forgetFrame(self):
+        
         self.frame1.pack_forget()
         self.frame2.pack_forget()
         self.frame3.pack_forget()
@@ -44,10 +52,55 @@ class Application:
         self.frame5.pack_forget()
         self.frame6.pack_forget()
 
+    def task1(self):
+        
+        self.__forgetFrame()
+        frame = self.frame1
+        frame.pack()  # Place frame1 into the window
+        
+        # define labels
+        label_title = Label(frame, text="Implement Black-Scholes Formulas for European call/put options.", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_s0 = Label(frame, text="Spot Price of Asset:").grid(row = 3, column = 1, sticky = W)
+        label_sigma = Label(frame, text="Volatility:").grid(row = 4, column = 1, sticky = W)
+        label_r = Label(frame, text="Risk-free Interest Rate:").grid(row = 5, column = 1, sticky = W)
+        label_repo = Label(frame, text="Repo Rate:").grid(row = 6, column = 1, sticky = W)
+        label_T = Label(frame, text="Time to Maturity (in years):").grid(row = 7, column = 1, sticky = W)
+        label_K = Label(frame, text="Strike:").grid(row = 8, column = 1, sticky = W)
+        
+        # define input type for input input variables
+        self.s0 = DoubleVar()
+        self.sigma = DoubleVar()
+        self.r = DoubleVar()
+        self.repo = DoubleVar()
+        self.T = DoubleVar()
+        self.K = DoubleVar()
+        self.option_type = StringVar()
+        
+        # define input boxes for input variables
+        entry_s0 = Entry(frame, textvariable = self.s0).grid(row = 3, column = 2)
+        entry_sigma = Entry(frame, textvariable = self.sigma).grid(row = 4, column = 2)
+        entry_r = Entry(frame, textvariable = self.r).grid(row = 5, column = 2)
+        entry_repo = Entry(frame, textvariable = self.T).grid(row = 6, column = 2)
+        entry_T = Entry(frame, textvariable = self.n).grid(row = 7, column = 2)
+        entry_K = Entry(frame, textvariable = self.K).grid(row = 8, column = 2)
+        
+        # define run button to run the computing
+        btRun = Button(frame, width = 15, text = "Run", command = self.run_task1).grid(row=10, column=1, columnspan = 3)
+        
+        # define the window to display the result
+        self.logs = scrolledtext.ScrolledText(frame)
+        self.logs.grid(row=20, column = 1, rowspan = 4, columnspan=2)
+        
+        # define the list for the user to select option type
+        comboxlist = ttk.Combobox(frame, width = 20, height = 8, textvariable = self.option_type, postcommand = self.run_task1) #初始化  
+        comboxlist["values"]=("Select Option Type", "Call Option", "Put Option")
+        comboxlist.current(0)
+        comboxlist.grid(row = 9, column = 1 ,sticky = W)
+        
     def task4(self):
         frame = self.frame4
         self.__forgetFrame()
-        frame.pack()  # 将框架frame1放置在window中˝
+        frame.pack()  # 将框架frame4放置在window中˝
 
         label_s0 = Label(frame, text="S0")
         label_sigma = Label(frame, text="sigma")
@@ -180,8 +233,13 @@ class Application:
 
         self.logs = scrolledtext.ScrolledText(frame)
         self.logs.grid(row=8, column=1, columnspan=4)
-
+        
+    def run_task1(self):
+        
+        self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
+        
     def run_task4(self):
+        
         self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
 
         option = MCArithAsianOption(s0=self.s0.get(), sigma=self.sigma.get(), r=self.r.get(),
@@ -191,6 +249,7 @@ class Application:
         self.logs.insert(END, "The result: {}\n".format(result))
 
     def run_task5(self):
+        
         self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
 
         option = MCArithBasketOption(s0_1=self.s0_1.get() ,s0_2=self.s0_2.get(), sigma_1=self.sigma_1.get(),
