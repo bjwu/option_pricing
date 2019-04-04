@@ -6,7 +6,7 @@ import math
 from math import e
 from scipy.stats import norm
 
-class BS_European_Option:
+class BSEuroOption:
     
     def __init__(self, S, sigma, r, q, T, K):
         
@@ -23,18 +23,25 @@ class BS_European_Option:
         # strike
         self.K = K
         
-    def Call_Option(self, t):
+    def CallOption(self, t = 0):
         
-        t = 0
         S, sigma, r, q, T, K = self.S, self.sigma, self.r, self.q, self.T, self.K
         d1 = (math.log(S/K) + (r-q)*(T-t))/(sigma*math.sqrt(T-t)) + (1/2)*sigma*math.sqrt(T-t)
         d2 = (math.log(S/K) + (r-q)*(T-t))/(sigma*math.sqrt(T-t)) - (1/2)*sigma*math.sqrt(T-t)
         N_d1 = norm.cdf(d1)
         N_d2 = norm.cdf(d2)
-        C = S*e**(-q*(T-t))*N_d1 - K*e**(-r*(T-t))*N_d2
-        return C
+        CallValue = S*e**(-q*(T-t))*N_d1 - K*e**(-r*(T-t))*N_d2
         
-    def Put_Option(self, S, sigmoid, r, q, T, K):
+        return CallValue
         
-        pass
+    def PutOption(self, t = 0):
+        
+        S, sigma, r, q, T, K = self.S, self.sigma, self.r, self.q, self.T, self.K
+        d1 = (math.log(S/K) + (r-q)*(T-t))/(sigma*math.sqrt(T-t)) + (1/2)*sigma*math.sqrt(T-t)
+        d2 = (math.log(S/K) + (r-q)*(T-t))/(sigma*math.sqrt(T-t)) - (1/2)*sigma*math.sqrt(T-t)
+        Negative_N_d1 = norm.cdf(-d1)
+        Negative_N_d2 = norm.cdf(-d2)
+        PutValue = K*e**(-r*(T-t))*Negative_N_d2 - S*e**(-q*(T-t))*Negative_N_d1
+        
+        return PutValue
         
