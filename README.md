@@ -6,6 +6,7 @@ Authors: WU, ZAHNG, XUE
 
 Completed tasks:
 
+
 * Implement the Black-Scholes Formulas for European call/put options.
 
 * Implement the volatility calcalator for European call/put options.
