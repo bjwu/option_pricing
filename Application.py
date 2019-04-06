@@ -6,6 +6,9 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import scrolledtext
 import tkinter.font as tkFont
+from BSEuroOption import BSEuroOption
+from ImpliedVolatility import ImpliedVolatility
+import math
 from MCArithAsianOption import MCArithAsianOption
 from MCArithBasketOption import MCArithBasketOption
 
@@ -105,9 +108,9 @@ class Application:
         entry_K = Entry(frame, textvariable = self.K).grid(row = 8, column = 2, sticky = W)
         
         # define the list for user to select option type
-        comboboxlist = ttk.Combobox(frame, width = 17, values = ("Select Option Type", "Call Option", "Put Option"),textvariable = self.option_type, postcommand = self.run_task1)  
-        comboboxlist.current(0) # set the default Option Type: Call Option
-        comboboxlist.grid(row = 9, column = 2, sticky = W)
+        self.comboboxlist_task1 = ttk.Combobox(frame, width = 17, values = ("Select Option Type", "Call Option", "Put Option"), textvariable = self.option_type, postcommand = self.run_task1)  
+        self.comboboxlist_task1.current(0) # set the default selection
+        self.comboboxlist_task1.grid(row = 9, column = 2, sticky = W)
         
         # Reset the input and the log
         btReset = Button(frame, width = 10, text = "Reset", command = self.ResetTask1).grid(row=10, column=2, columnspan = 1, sticky = E)
@@ -126,51 +129,55 @@ class Application:
         frame.pack()  # Place frame2 into the window
         
         # define labels
-        label_title = Label(frame, text = "Implied Volatility Calculator", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_title = Label(frame, text = "Implied Volatility Calculator for European Option", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
         label_s0 = Label(frame, text = "Spot Price of Asset:").grid(row = 3, column = 1, sticky = W)
-        label_sigma = Label(frame, text = "Volatility:").grid(row = 4, column = 1, sticky = W)
-        label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 5, column = 1, sticky = W)
+        label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 4, column = 1, sticky = W)
+        label_q = Label(frame, text = "Repo Rate:").grid(row = 5, column = 1, sticky = W)
         label_T = Label(frame, text = "Time to Maturity (in years):").grid(row = 6, column = 1, sticky = W)
         label_K = Label(frame, text = "Strike:").grid(row = 7, column = 1, sticky = W)
-        label_N = Label(frame, text = "number of steps:").grid(row = 8, column = 1, sticky = W)
+        label_V = Label(frame, text = "Option Premium:").grid(row = 8, column = 1, sticky = W)
         label_OptionType = Label(frame, text="Option Type:").grid(row = 9, column = 1, sticky = W)
         
         # define input type for input input variables
         self.s0 = DoubleVar()
-        self.sigma = DoubleVar()
         self.r = DoubleVar()
+        self.q = DoubleVar()
         self.T = DoubleVar()
         self.K = DoubleVar()
-        self.N = IntVar()
+        self.V = DoubleVar()
         self.option_type = StringVar()
         
         # define input boxes for input variables
         entry_s0 = Entry(frame, textvariable = self.s0).grid(row = 3, column = 2, sticky = E)
-        entry_sigma = Entry(frame, textvariable = self.sigma).grid(row = 4, column = 2, sticky = E)
-        entry_r = Entry(frame, textvariable = self.r).grid(row = 5, column = 2, sticky = E)
+        entry_r = Entry(frame, textvariable = self.r).grid(row = 4, column = 2, sticky = E)
+        entry_q = Entry(frame, textvariable = self.q).grid(row = 5, column = 2, sticky = E)
         entry_T = Entry(frame, textvariable = self.T).grid(row = 6, column = 2, sticky = E)
         entry_K = Entry(frame, textvariable = self.K).grid(row = 7, column = 2, sticky = E)
-        entry_N = Entry(frame, textvariable = self.N).grid(row = 8, column = 2, sticky = E)
+        entry_V = Entry(frame, textvariable = self.V).grid(row = 8, column = 2, sticky = E)
         
         # define the list for user to select option type
-        comboboxlist = ttk.Combobox(frame, width = 17, values = ("Select Option Type", "Call Option", "Put Option"),textvariable = self.option_type, postcommand = self.run_task1)  
-        comboboxlist.current(0) # set the default Option Type: Call Option
-        comboboxlist.grid(row = 9, column = 2, sticky = E)
+        self.comboboxlist_task2 = ttk.Combobox(frame, width = 17, values = ("Select Option Type", "Call Option", "Put Option"), textvariable = self.option_type, postcommand = self.run_task2)  
+        self.comboboxlist_task2.current(0) # set the default Option Type
+        self.comboboxlist_task2.grid(row = 9, column = 2, sticky = E)
         
         # Reset the input and the log
-        btReset = Button(frame, width = 18, text = "Reset", command = self.ResetTask2).grid(row=10, column=1, columnspan = 1, sticky = E)
+        btReset = Button(frame, width = 23, text = "Reset", command = self.ResetTask2).grid(row=10, column=1, columnspan = 1, sticky = E)
         
         # define run button to run the computing
-        btRun = Button(frame, width = 18, text = "Run", command = self.run_task1).grid(row=10, column=1, columnspan = 1, sticky = W)
+        btRun = Button(frame, width = 23, text = "Run", command = self.run_task2).grid(row=10, column=1, columnspan = 1, sticky = W)
         
         # define the window to display the result
         self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 12)
         self.logs.grid(row = 20, column = 1, rowspan = 4, columnspan=2, sticky = W)
         
+    def task3(self):
+        
+        pass
+        
     def task4(self):
         frame = self.frame4
         self.__forgetFrame()
-        frame.pack()  # 将框架frame4放置在window中˝
+        frame.pack()  # Place frame4 into within the window
 
         label_s0 = Label(frame, text="S0")
         label_sigma = Label(frame, text="sigma")
@@ -304,6 +311,45 @@ class Application:
         self.logs = scrolledtext.ScrolledText(frame)
         self.logs.grid(row=8, column=1, columnspan=4)
         
+    def run_homepage(self):
+        
+        self.__forgetFrame()
+        self.frame6.pack()
+        
+    def run_task1(self):
+        
+        OptionType = self.option_type.get()
+        
+        if OptionType == "Call Option":
+            
+            try:
+  
+                option = BSEuroOption()
+                result = option.CallOption(S = self.s0.get(), sigma = self.sigma.get(), r = self.r.get(), q = self.repo.get(), T = self.T.get(), K = self.K.get())
+                self.logs.insert(END, "The Call Option Premium is: {}\n".format(result))
+                
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        elif OptionType == "Put Option": 
+            
+            try:
+            
+                option = BSEuroOption()
+                result = option.PutOption(S = self.s0.get(), sigma = self.sigma.get(), r = self.r.get(), q = self.repo.get(), T = self.T.get(), K = self.K.get())
+                self.logs.insert(END, "The Put Option Premium is: {}\n".format(result))
+            
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+        
+        else:
+            
+            pass
+        
+        self.comboboxlist_task1.current(0)
+            
     def ResetTask1(self):
         
         frame = self.frame1
@@ -324,26 +370,49 @@ class Application:
         
         self.task1()
         
-    def run_homepage(self):
-        
-        self.__forgetFrame()
-        self.frame6.pack()
-        
-    def run_task1(self):
+    def run_task2(self):
         
         OptionType = self.option_type.get()
         
         if OptionType == "Call Option":
             
-            self.logs.insert(END, "The result: {}\n".format(OptionType))
+            try:
+  
+                instance = ImpliedVolatility(S = self.s0.get(), r = self.r.get(), q = self.q.get(), T = self.T.get(), K = self.K.get(), V = self.V.get())
+                result = instance.CallVolatility()
+                
+                if math.isnan(result) or math.isinf(result):
+                    
+                    self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                    
+                else:
+                    
+                    self.logs.insert(END, "The Implied Volatility for Call Option is: {}\n".format(result))
+                
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        if OptionType == "Put Option": 
             
-        elif OptionType == "Put Option":
+            try:
             
-            self.logs.insert(END, "The result: {}\n".format(OptionType))
+                instance = ImpliedVolatility(S = self.s0.get(), r = self.r.get(), q = self.q.get(), T = self.T.get(), K = self.K.get(), V = self.V.get())
+                result = instance.PutVolatility()
+                
+                if math.isnan(result) or math.isinf(result):
+                    
+                    self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                    
+                else:
+                    
+                    self.logs.insert(END, "The Implied Volatility for Put Option is: {}\n".format(result))
             
-        else:
-            
-            self.logs.insert(END, "The Option Type is not specified or incorrect, please specified it. \n")
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        self.comboboxlist_task2.current(0)
             
     def ResetTask2(self):
         
@@ -364,6 +433,14 @@ class Application:
         entry_N = Entry(frame, textvariable = self.N).grid(row = 8, column = 2, sticky = E)
         
         self.task2()
+        
+    def run_task3(self):
+        
+        pass
+        
+    def ResetTask3(self):
+        
+        pass
         
     def run_task4(self):
         
@@ -391,4 +468,5 @@ class Application:
         self.window.destroy()
 
 if __name__ == '__main__':
+    
     Application()
