@@ -9,6 +9,7 @@ import tkinter.font as tkFont
 from BSEuroOption import BSEuroOption
 from ImpliedVolatility import ImpliedVolatility
 from CFGeoAsianOption import GeoAsianOption
+from CFGeoBasketOption import CFGeoBasketOption
 import math
 from MCArithAsianOption import MCArithAsianOption
 from MCArithBasketOption import MCArithBasketOption
@@ -532,7 +533,51 @@ class Application:
         
     def run_task4(self):
         
-        pass
+        OptionType = self.option_type.get()
+        
+        if OptionType == "Call Option":
+            
+            try:
+  
+                instance = CFGeoBasketOption(s0_1 = self.s0_1.get(), s0_2 = self.s0_2.get(), 
+                                          sigma_1 = self.sigma_1.get(), sigma_2 = self.sigma_2.get(), 
+                                          r = self.r.get(), T = self.T.get(), K = self.K.get(), rho = self.rho.get())
+                result = instance.CallGeoBasket()
+                
+                if math.isnan(result) or math.isinf(result):
+                    
+                    self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                    
+                else:
+                    
+                    self.logs.insert(END, "The Call Option Premium is: {}\n".format(result))
+                
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        if OptionType == "Put Option": 
+            
+            try:
+            
+                instance = CFGeoBasketOption(s0_1 = self.s0_1.get(), s0_2 = self.s0_2.get(), 
+                                          sigma_1 = self.sigma_1.get(), sigma_2 = self.sigma_2.get(), 
+                                          r = self.r.get(), T = self.T.get(), K = self.K.get(), rho = self.rho.get())
+                result = instance.PutGeoBasket()
+                
+                if math.isnan(result) or math.isinf(result):
+                    
+                    self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                    
+                else:
+                    
+                    self.logs.insert(END, "The Put Option Premium is: {}\n".format(result))
+            
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        self.comboboxlist_task4.current(0)
     
     def ResetTask4(self):
                 

@@ -13,6 +13,8 @@ Completed tasks:
 
 * Implement closed-form formulas for geometric Asian call/put options.
 
+* Implement closed-form formulas for geometric Basket call/put options.
+
 * Implement the Monte Carlo method with control variate technique for arithmetic Asian call/put options.
 
 * Implement the Monte Carlo method with control variate technique for arithmetic mean basket call/put options.
