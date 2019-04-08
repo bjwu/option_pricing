@@ -5,7 +5,7 @@ For the arithmetic mean basket options, we only need to consider a basket with t
 """
 from scipy.stats import norm
 import numpy as np
-from CFGeoOption import CFGeoBasketOption
+from CFGeoBasketOption import CFGeoBasketOption
 
 
 class MCArithBasketOption(CFGeoBasketOption):
