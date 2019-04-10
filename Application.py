@@ -1,5 +1,5 @@
 """
-A graphical user interface for users to easily price various options with your pricer.
+A graphical user interface for users to easily price various options with multiple pricer.
 """
 
 from tkinter import *
@@ -281,19 +281,21 @@ class Application:
         self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 9)
         self.logs.grid(row = 12, column = 1, rowspan = 4, columnspan = 2, sticky = W)
     
-    # Implement the Monte Carlo method with control variate technique for arithmetic Asian call/put options.
+    # Implement the Monte Carlo method with control variate technique for Arithmetic Asian call/put options.
     def task5(self):
         
         frame = self.frame5
         self.__forgetFrame()
         frame.pack()  # Place frame5 into within the window
 
-        label_s0 = Label(frame, text="S0").grid(row=1, column=1, sticky=E)
-        label_sigma = Label(frame, text="sigma").grid(row=1, column=3, sticky=E)
-        label_r = Label(frame, text="r").grid(row=2, column=1, sticky=E)
-        label_T = Label(frame, text="T").grid(row=2, column=3, sticky=E)
-        label_n = Label(frame, text="n").grid(row=3, column=1, sticky=E)
-        label_K = Label(frame, text="K").grid(row=3, column=3, sticky=E)
+        label_title = Label(frame, text = "Arithmetic Asian Option from MC", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_s0 = Label(frame, text="S0").grid(row=2, column=1, sticky=E)
+        label_sigma = Label(frame, text="sigma").grid(row=2, column=3, sticky=E)
+        label_r = Label(frame, text="r").grid(row=3, column=1, sticky=E)
+        label_T = Label(frame, text="T").grid(row=3, column=3, sticky=E)
+        label_n = Label(frame, text="n").grid(row=4, column=1, sticky=E)
+        label_K = Label(frame, text="K").grid(row=4, column=3, sticky=E)
+        label_m = Label(frame, text="m").grid(row=5, column=1, sticky=E)
 
         self.s0 = DoubleVar()
         self.sigma = DoubleVar()
@@ -302,26 +304,28 @@ class Application:
         self.n = IntVar()
         self.K = DoubleVar()
         self.option_type = StringVar()
+        self.m = IntVar()
         self.ctrl_var = BooleanVar()
 
-        entry_s0 = Entry(frame, textvariable=self.s0).grid(row=1, column=2, sticky=E)
-        entry_sigma = Entry(frame, textvariable=self.sigma).grid(row=1, column=4, sticky=E)
-        entry_r = Entry(frame, textvariable=self.r).grid(row=2, column=2, sticky=E)
-        entry_T = Entry(frame, textvariable=self.T).grid(row=2, column=4, sticky=E)
-        entry_n = Entry(frame, textvariable=self.n).grid(row=3, column=2, sticky=E)
-        entry_K = Entry(frame, textvariable=self.K).grid(row=3, column=4, sticky=E)
+        entry_s0 = Entry(frame, textvariable=self.s0).grid(row=2, column=2, sticky=E)
+        entry_sigma = Entry(frame, textvariable=self.sigma).grid(row=2, column=4, sticky=E)
+        entry_r = Entry(frame, textvariable=self.r).grid(row=3, column=2, sticky=E)
+        entry_T = Entry(frame, textvariable=self.T).grid(row=3, column=4, sticky=E)
+        entry_n = Entry(frame, textvariable=self.n).grid(row=4, column=2, sticky=E)
+        entry_K = Entry(frame, textvariable=self.K).grid(row=4, column=4, sticky=E)
+        entry_m = Entry(frame, textvariable=self.m).grid(row=5, column=2, sticky=E)
 
-        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=4, column=1, sticky=W)
+        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=6, column=1, sticky=W)
 
-        rbPut = Radiobutton(frame, width=6, text="Put", bg="red", variable=self.option_type, value='put').grid(row=4, column=2, sticky=E)
-        rbCall = Radiobutton(frame, width=6, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=4, column=3, sticky=W)
+        rbPut = Radiobutton(frame, width=6, text="Put", bg="red", variable=self.option_type, value='put').grid(row=6, column=2, sticky=E)
+        rbCall = Radiobutton(frame, width=6, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=6, column=3, sticky=W)
 
-        btRun = Button(frame, width=10, text="Run", command=self.run_task5).grid(row=5, column=1, columnspan=4)
+        btRun = Button(frame, width=10, text="Run", command=self.run_task5).grid(row=7, column=1, columnspan=4)
 
-        self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 19)
-        self.logs.grid(row=6, column=1, columnspan=4)
+        self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 16)
+        self.logs.grid(row=8, column=1, columnspan=4)
         
-    # Implement the Monte Carlo method with control variate technique for arithmetric mean basket call/put options. (for the case a basket with two assets)
+    # Implement the Monte Carlo method with control variate technique for Arithmetric Mean Basket call/put options. (for the case a basket with two assets)
     def task6(self):
         
         frame = self.frame6
@@ -642,14 +646,15 @@ class Application:
         
     def run_task5(self):
         
-        self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
+        self.logs.insert(END, "waiting.... [It may take you several minutes]\n")
 
         option = MCArithAsianOption(s0=self.s0.get(), sigma=self.sigma.get(), r=self.r.get(),
-                                    T=self.T.get(), K=self.K.get(),
+                                    T=self.T.get(), K=self.K.get(), n=self.n.get(), m=self.m.get(), 
                                     option_type=self.option_type.get(), ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=self.n.get())
-        print (result)
-        self.logs.insert(END, "The result: {}\n".format(result))
+        result, interval = option.pricing()
+        self.logs.insert(END, "The option premium is: {}\n".format(result))
+        # output the 95% confidence interval
+        self.logs.insert(END, "The 95% confidence interval is: {}\n\n".format(interval))
 
     def run_task6(self):
         
@@ -660,7 +665,7 @@ class Application:
                                      rho=self.rho.get(),option_type=self.option_type.get(),
                                      ctrl_var=self.ctrl_var.get())
         result = option.pricing(num_randoms=self.n.get())
-        self.logs.insert(END, "The result: {}\n".format(result))
+        self.logs.insert(END, "The put option premium is: {}\n".format(result))
         
     def run_task7(self):
         
