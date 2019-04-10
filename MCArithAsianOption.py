@@ -4,6 +4,7 @@ Implement the Monte Carlo method with control variate technique for arithmetic A
 """
 from scipy.stats import norm
 import numpy as np
+import sys
 
 
 class MCArithAsianOption:
@@ -56,9 +57,12 @@ class MCArithAsianOption:
         arithPayoff_put = [0] * m 
         geoPayoff_call = [0] * m
         geoPayoff_put = [0] * m   
-
+        
         for i in range(m):
-
+                
+            # fix the initial seed/state of the random number generator so that the results from the program are reproducible
+            k = i+2*i+3*1+4*i+6*i
+            Z = np.random.seed(k)
             Z = np.random.normal(0, 1, n)
             Spath = [0] * n
             growthFactor = drift * np.exp(self.sigma*np.sqrt(dt)*Z[0])
@@ -128,6 +132,6 @@ class MCArithAsianOption:
 '''
 if __name__ == '__main__':
     option = MCArithAsianOption(s0=100, sigma=0.3, r=0.05, T=3, K=100,
-                 n=100, m=100000, option_type='put', ctrl_var=True)
+                 n=100, m=100000, option_type='call', ctrl_var=False)
     option.pricing()
 '''
