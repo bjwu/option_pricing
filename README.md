@@ -18,3 +18,5 @@ Completed tasks:
 * Implement the Monte Carlo method with control variate technique for arithmetic Asian call/put options.
 
 * Implement the Monte Carlo method with control variate technique for arithmetic mean basket call/put options.
+
+* Implement the Binomial Tree method for American call/put options.
