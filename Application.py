@@ -1,5 +1,5 @@
 """
-A graphical user interface for users to easily price various options with your pricer.
+A graphical user interface for users to easily price various options with multiple pricer.
 """
 
 from tkinter import *
@@ -13,7 +13,7 @@ from CFGeoBasketOption import CFGeoBasketOption
 import math
 from MCArithAsianOption import MCArithAsianOption
 from MCArithBasketOption import MCArithBasketOption
-
+from BiTreeAmericanOption import BiTreeAmericanOption
 
 class Application:
     
@@ -48,6 +48,7 @@ class Application:
         self.frame4 = Frame(self.window)
         self.frame5 = Frame(self.window)
         self.frame6 = Frame(self.window)
+        self.frame7 = Frame(self.window)
         self.frameHomePage = Frame(self.window) 
 
     def __HomePage(self):
@@ -62,11 +63,12 @@ class Application:
         filemenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label='Select Pricer Model', menu=filemenu)
         filemenu.add_command(label = "Pricer 1: European Options - Black-Scholes Formulas", command=self.task1)
-        filemenu.add_command(label = "Pricer 2: Implied volatility - European Options", command=self.task2)
-        filemenu.add_command(label = "Pricer 3: Geometric Asian Options - Closed-Form Formulas", command=self.task3)
-        filemenu.add_command(label = "Pricer 4: Geometric Basket Options - Closed-Form Formulas", command=self.task4)
+        filemenu.add_command(label = "Pricer 2: Implied Volatility - European Options", command=self.task2)
+        filemenu.add_command(label = "Pricer 3: Geometric Asian Options - Closed-Form Formula", command=self.task3)
+        filemenu.add_command(label = "Pricer 4: Geometric Basket Options - Closed-Form Formula", command=self.task4)
         filemenu.add_command(label = "Pricer 5: Arithmetic Asian Options - Monte Carlo Method", command=self.task5)
         filemenu.add_command(label = "Pricer 6: Arithmetic Mean Basket Options - Monte Carlo Method", command=self.task6)
+        filemenu.add_command(label = "Pricer 7: American Options - Binomial Tree Method", command=self.task7)
 
     # For switching page, forget the current page and jump to another page
     def __forgetFrame(self):
@@ -77,6 +79,7 @@ class Application:
         self.frame4.pack_forget()
         self.frame5.pack_forget()
         self.frame6.pack_forget()
+        self.frame7.pack_forget()
         self.frameHomePage.pack_forget()
 
     # Implement Black-Scholes Formulas for European call/put option.
@@ -87,7 +90,7 @@ class Application:
         frame.pack()  # Place frame1 into the window
         
         # define labels
-        label_title = Label(frame, text = "Implement Black-Scholes Formulas for European Call/Put Option.", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_title = Label(frame, text = "Implement Black-Scholes Formulas for European Call/Put Options.", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
         label_s0 = Label(frame, text = "Spot Price of Asset:").grid(row = 2, column = 1, sticky = W)
         label_sigma = Label(frame, text = "Volatility:").grid(row = 3, column = 1, sticky = W)
         label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 4, column = 1, sticky = W)
@@ -135,7 +138,7 @@ class Application:
         frame.pack()  # Place frame2 into the window
         
         # define labels
-        label_title = Label(frame, text = "Implied Volatility Calculator for European Option", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_title = Label(frame, text = "Implied Volatility Calculator for European Options", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
         label_s0 = Label(frame, text = "Spot Price of Asset:").grid(row = 2, column = 1, sticky = W)
         label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 3, column = 1, sticky = W)
         label_q = Label(frame, text = "Repo Rate:").grid(row = 4, column = 1, sticky = W)
@@ -183,7 +186,7 @@ class Application:
         frame.pack()  # Place frame3 into the window
         
         # define labels
-        label_title = Label(frame, text = "Implement Closed-form Formulas for Geometric Asian Call/Put Option", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_title = Label(frame, text = "Implement Closed-form Formulas for Geometric Asian Call/Put Options", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
         label_s0 = Label(frame, text = "Spot Price of Asset:").grid(row = 2, column = 1, sticky = W)
         label_sigma = Label(frame, text = "Implied Volatility:").grid(row = 3, column = 1, sticky = W)
         label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 4, column = 1, sticky = W)
@@ -232,7 +235,7 @@ class Application:
         frame.pack()  # Place frame4 into the window
         
         # define labels
-        label_title = Label(frame, text = "Implement Closed-form Formulas for Geometric Basket Call/Put Option", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_title = Label(frame, text = "Implement Closed-form Formulas for Geometric Basket Call/Put Options", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
         label_s0_1 = Label(frame, text = "Spot Price of Asset 1:").grid(row = 2, column = 1, sticky = W)
         label_s0_2 = Label(frame, text = "Spot Price of Asset 2:").grid(row = 3, column = 1, sticky = W)
         label_sigma_1 = Label(frame, text = "Volatility of Asset 1:").grid(row = 4, column = 1, sticky = W)
@@ -278,19 +281,21 @@ class Application:
         self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 9)
         self.logs.grid(row = 12, column = 1, rowspan = 4, columnspan = 2, sticky = W)
     
-    # Implement the Monte Carlo method with control variate technique for arithmetic Asian call/put options.
+    # Implement the Monte Carlo method with control variate technique for Arithmetic Asian call/put options.
     def task5(self):
         
         frame = self.frame5
         self.__forgetFrame()
         frame.pack()  # Place frame5 into within the window
 
-        label_s0 = Label(frame, text="S0").grid(row=1, column=1)
-        label_sigma = Label(frame, text="sigma").grid(row=1, column=3)
-        label_r = Label(frame, text="r").grid(row=2, column=1)
-        label_T = Label(frame, text="T").grid(row=2, column=3)
-        label_n = Label(frame, text="n").grid(row=3, column=1)
-        label_K = Label(frame, text="K").grid(row=3, column=3)
+        label_title = Label(frame, text = "Arithmetic Asian Option from MC", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_s0 = Label(frame, text="S0").grid(row=2, column=1, sticky=E)
+        label_sigma = Label(frame, text="sigma").grid(row=2, column=3, sticky=E)
+        label_r = Label(frame, text="r").grid(row=3, column=1, sticky=E)
+        label_T = Label(frame, text="T").grid(row=3, column=3, sticky=E)
+        label_n = Label(frame, text="n").grid(row=4, column=1, sticky=E)
+        label_K = Label(frame, text="K").grid(row=4, column=3, sticky=E)
+        label_m = Label(frame, text="m").grid(row=5, column=1, sticky=E)
 
         self.s0 = DoubleVar()
         self.sigma = DoubleVar()
@@ -299,40 +304,44 @@ class Application:
         self.n = IntVar()
         self.K = DoubleVar()
         self.option_type = StringVar()
+        self.m = IntVar()
         self.ctrl_var = BooleanVar()
 
-        entry_s0 = Entry(frame, textvariable=self.s0).grid(row=1, column=2)
-        entry_sigma = Entry(frame, textvariable=self.sigma).grid(row=1, column=4)
-        entry_r = Entry(frame, textvariable=self.r).grid(row=2, column=2)
-        entry_T = Entry(frame, textvariable=self.T).grid(row=2, column=4)
-        entry_n = Entry(frame, textvariable=self.n).grid(row=3, column=2)
-        entry_K = Entry(frame, textvariable=self.K).grid(row=3, column=4)
+        entry_s0 = Entry(frame, width=15, textvariable=self.s0).grid(row=2, column=2, sticky=E)
+        entry_sigma = Entry(frame, textvariable=self.sigma).grid(row=2, column=4, sticky=E)
+        entry_r = Entry(frame, width=15,textvariable=self.r).grid(row=3, column=2, sticky=E)
+        entry_T = Entry(frame, textvariable=self.T).grid(row=3, column=4, sticky=E)
+        entry_n = Entry(frame, width=15, textvariable=self.n).grid(row=4, column=2, sticky=E)
+        entry_K = Entry(frame, textvariable=self.K).grid(row=4, column=4, sticky=E)
+        entry_m = Entry(frame, width=15, textvariable=self.m).grid(row=5, column=2, sticky=E)
 
-        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=4, column=1)
+        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=6, column=1, sticky=W)
 
-        rbPut = Radiobutton(frame, text="Put", bg="red", variable=self.option_type, value='put').grid(row=4, column=2)
-        rbCall = Radiobutton(frame, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=4, column=3)
+        rbPut = Radiobutton(frame, width=6, text="Put", bg="red", variable=self.option_type, value='put').grid(row=6, column=2, sticky=E)
+        rbCall = Radiobutton(frame, width=6, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=6, column=3, sticky=W)
 
-        btRun = Button(frame, text="Run", command=self.run_task5).grid(row=5, column=1, columnspan=4)
+        btRun = Button(frame, width=10, text="Run", command=self.run_task5).grid(row=7, column=1, columnspan=4)
 
-        self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 19).grid(row=6, column=1, columnspan=4)
+        self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 16)
+        self.logs.grid(row=8, column=1, columnspan=4)
         
-    # Implement the Monte Carlo method with control variate technique for arithmetric mean basket call/put options. (for the case a basket with two assets)
+    # Implement the Monte Carlo method with control variate technique for Arithmetric Mean Basket call/put options. (for the case a basket with two assets)
     def task6(self):
         
         frame = self.frame6
         self.__forgetFrame()
         frame.pack()
 
-        label_s0_1 = Label(frame, text="S0_1").grid(row=1, column=1)
-        label_s0_2 = Label(frame, text="S0_2").grid(row=1, column=3)
-        label_sigma_1 = Label(frame, text="sigma_1").grid(row=2, column=1)
-        label_sigma_2 = Label(frame, text="sigma_2").grid(row=2, column=3)
-        label_r = Label(frame, text="r").grid(row=3, column=1)
-        label_T = Label(frame, text="T").grid(row=3, column=3)
-        label_n = Label(frame, text="n").grid(row=4, column=1)
-        label_K = Label(frame, text="K").grid(row=4, column=3)
-        label_rho = Label(frame, text="rho").grid(row=5, column=1)
+        label_title = Label(frame, text = "Arithmetic Mean Bakset Option from MC", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_s0_1 = Label(frame, text="S0_1").grid(row=2, column=1, sticky=E)
+        label_s0_2 = Label(frame, text="S0_2").grid(row=2, column=3, sticky=E)
+        label_sigma_1 = Label(frame, text="sigma_1").grid(row=3, column=1, sticky=E)
+        label_sigma_2 = Label(frame, text="sigma_2").grid(row=3, column=3, sticky=E)
+        label_r = Label(frame, text="r").grid(row=4, column=1, sticky=E)
+        label_T = Label(frame, text="T").grid(row=4, column=3, sticky=E)
+        label_K = Label(frame, text="K").grid(row=5, column=1, sticky=E)
+        label_rho = Label(frame, text="rho").grid(row=5, column=3, sticky=E)
+        label_m = Label(frame, text="m").grid(row=6, column=1, sticky=E)
 
         self.s0_1 = DoubleVar()
         self.s0_2 = DoubleVar()
@@ -340,36 +349,79 @@ class Application:
         self.sigma_2 = DoubleVar()
         self.r = DoubleVar()
         self.T = DoubleVar()
-        self.n = IntVar()
         self.K = DoubleVar()
         self.rho = DoubleVar()
         self.option_type = StringVar()
+        self.m = IntVar()
         self.ctrl_var = BooleanVar()
 
-        entry_s0_1 = Entry(frame, textvariable=self.s0_1).grid(row=1, column=2)
-        entry_s0_2 = Entry(frame, textvariable=self.s0_2).grid(row=1, column=4)
-        entry_sigma_1 = Entry(frame, textvariable=self.sigma_1).grid(row=2, column=2)
-        entry_sigma_2 = Entry(frame, textvariable=self.sigma_2).grid(row=2, column=4)
-        entry_r = Entry(frame, textvariable=self.r).grid(row=3, column=2)
-        entry_T = Entry(frame, textvariable=self.T).grid(row=3, column=4)
-        entry_n = Entry(frame, textvariable=self.n).grid(row=4, column=2)
-        entry_K = Entry(frame, textvariable=self.K).grid(row=4, column=4)
-        entry_rho = Entry(frame, textvariable=self.rho).grid(row=5, column=2)
+        entry_s0_1 = Entry(frame, width=16, textvariable=self.s0_1).grid(row=2, column=2, sticky=E)
+        entry_s0_2 = Entry(frame, width=20, textvariable=self.s0_2).grid(row=2, column=4, sticky=E)
+        entry_sigma_1 = Entry(frame, width=16, textvariable=self.sigma_1).grid(row=3, column=2, sticky=E)
+        entry_sigma_2 = Entry(frame, width=20, textvariable=self.sigma_2).grid(row=3, column=4, sticky=E)
+        entry_r = Entry(frame, width=16, textvariable=self.r).grid(row=4, column=2, sticky=E)
+        entry_T = Entry(frame, width=20, textvariable=self.T).grid(row=4, column=4, sticky=E)
+        entry_K = Entry(frame, width=16, textvariable=self.K).grid(row=5, column=2, sticky=E)
+        entry_rho = Entry(frame, width=20, textvariable=self.rho).grid(row=5, column=4, sticky=E)
+        entry_m = Entry(frame, width=16, textvariable=self.m).grid(row=6, column=2, sticky=E)
 
-
-        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=6, column=1)
+        cbtCV = Checkbutton(frame, text="Control Variate?", variable=self.ctrl_var).grid(row=7, column=1)
         
-        rbPut = Radiobutton(frame, text="Put", bg="red", variable=self.option_type, value='put').grid(row=6, column=2)
-        rbCall = Radiobutton(frame, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=6, column=3)
+        rbPut = Radiobutton(frame, text="Put", bg="red", variable=self.option_type, value='put').grid(row=7, column=2)
+        rbCall = Radiobutton(frame, text="Call", bg="yellow", variable=self.option_type, value='call').grid(row=7, column=3)
 
-        btRun = Button(frame, text="Run", command=self.run_task6).grid(row=7, column=1, columnspan=4)
+        btRun = Button(frame, width=10, text="Run", command=self.run_task6).grid(row=8, column=1, columnspan=4)
 
-        self.logs = scrolledtext.ScrolledText(frame).grid(row=8, column=1, columnspan=4)
+        self.logs = scrolledtext.ScrolledText(frame, height=14)
+        self.logs.grid(row=9, column=1, columnspan=4)
         
     # The Binomial Tree method for American call/put options.
     def task7(self):
         
-        pass
+        frame = self.frame7
+        self.__forgetFrame()
+        frame.pack()
+        
+        # define labels
+        label_title = Label(frame, text = "Implement the Binomial Tree Method for American Call/Put Options", fg = "red", justify = "right").grid(row = 1, column = 1,sticky = W)
+        label_s0 = Label(frame, text = "Spot Price of Asset:").grid(row = 2, column = 1, sticky = W)
+        label_sigma = Label(frame, text = "Volatility:").grid(row = 3, column = 1, sticky = W)
+        label_r = Label(frame, text = "Risk-free Interest Rate:").grid(row = 4, column = 1, sticky = W)
+        label_T = Label(frame, text = "Time to Maturity (in years):").grid(row = 5, column = 1, sticky = W)
+        label_K = Label(frame, text = "Strike:").grid(row = 6, column = 1, sticky = W)
+        label_N = Label(frame, text = "Number of Steps:").grid(row = 7, column = 1, sticky = W)
+        label_OptionType = Label(frame, text = "Option Type:").grid(row = 8, column = 1, sticky = W)
+        
+        self.s0 = DoubleVar()
+        self.sigma = DoubleVar()
+        self.r = DoubleVar()
+        self.T = DoubleVar()
+        self.K = DoubleVar()
+        self.N = IntVar()
+        self.option_type = StringVar()
+        
+        # define input boxes for input variables
+        entry_s0 = Entry(frame, textvariable = self.s0).grid(row = 2, column = 2, sticky = W)
+        entry_sigma = Entry(frame, textvariable = self.sigma).grid(row = 3, column = 2, sticky = W)
+        entry_r = Entry(frame, textvariable = self.r).grid(row = 4, column = 2, sticky = W)
+        entry_T = Entry(frame, textvariable = self.T).grid(row = 5, column = 2, sticky = W)
+        entry_K = Entry(frame, textvariable = self.K).grid(row = 6, column = 2, sticky = W)
+        entry_N = Entry(frame, textvariable = self.N).grid(row = 7, column = 2, sticky = W)
+        
+        # define the list for user to select option type
+        self.comboboxlist_task7 = ttk.Combobox(frame, width = 17, values = ("Select Option Type", "Call Option", "Put Option"), textvariable = self.option_type, postcommand = self.run_task7)  
+        self.comboboxlist_task7.current(0) # set the default selection
+        self.comboboxlist_task7.grid(row = 8, column = 2, sticky = W)
+        
+        # Reset input and log
+        btReset = Button(frame, width = 10, text = "Reset", command = self.ResetTask7).grid(row = 9, column = 2, columnspan = 1, sticky = E)
+        
+        # define run button to run the pricer
+        btRun = Button(frame, width = 10, text = "Run", command = self.run_task7).grid(row = 9, column = 2, columnspan = 1, sticky = W)
+        
+        # define a window to display result
+        self.logs = scrolledtext.ScrolledText(frame, width = 74, height = 12)
+        self.logs.grid(row = 10, column = 1, rowspan = 4, columnspan = 2, sticky = W)
         
     def run_homepage(self):
         
@@ -594,13 +646,15 @@ class Application:
         
     def run_task5(self):
         
-        self.logs.insert(END, "waiting.... [It may take you several minutes]\n\n")
+        self.logs.insert(END, "waiting.... [It may take you several minutes]\n")
 
         option = MCArithAsianOption(s0=self.s0.get(), sigma=self.sigma.get(), r=self.r.get(),
-                                    T=self.T.get(), K=self.K.get(),
+                                    T=self.T.get(), K=self.K.get(), n=self.n.get(), m=self.m.get(), 
                                     option_type=self.option_type.get(), ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=self.n.get())
-        self.logs.insert(END, "The result: {}\n".format(result))
+        result, interval = option.pricing()
+        self.logs.insert(END, "The option premium is: {}\n".format(result))
+        # output the 95% confidence interval
+        self.logs.insert(END, "The 95% confidence interval is: {}\n\n".format(interval))
 
     def run_task6(self):
         
@@ -610,8 +664,53 @@ class Application:
                                      sigma_2=self.sigma_2.get(), r=self.r.get(), T=self.T.get(), K=self.K.get(),
                                      rho=self.rho.get(),option_type=self.option_type.get(),
                                      ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=self.n.get())
-        self.logs.insert(END, "The result: {}\n".format(result))
+        result = option.pricing(num_randoms=self.m.get())
+        self.logs.insert(END, "The put option premium is: {}\n".format(result))
+        
+    def run_task7(self):
+        
+        OptionType = self.option_type.get()
+        
+        if OptionType == "Call Option":
+            
+            try:
+  
+                option = BiTreeAmericanOption()
+                result = option.BiTreeAmericanOption(S0 = self.s0.get(), sigma = self.sigma.get(), r = self.r.get(), T = self.T.get(), K = self.K.get(), N = self.N.get(), option = 'call')
+                self.logs.insert(END, "The Call Option Premium is: {}\n".format(result))
+                
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+                
+        elif OptionType == "Put Option": 
+            
+            try:
+            
+                option = BiTreeAmericanOption()
+                result = option.BiTreeAmericanOption(S0 = self.s0.get(), sigma = self.sigma.get(), r = self.r.get(), T = self.T.get(), K = self.K.get(), N = self.N.get(), option = 'put')
+                self.logs.insert(END, "The Put Option Premium is: {}\n".format(result))
+            
+            except ZeroDivisionError:
+                
+                self.logs.insert(END, "Input Parameter Error! Please input the correct parameters!\n")
+        
+        else:
+            
+            pass
+        
+        self.comboboxlist_task7.current(0)
+    
+    def ResetTask7(self):
+                
+        self.s0 = 0
+        self.sigma = 0
+        self.r = 0
+        self.T = 0
+        self.K = 0
+        self.N = 0
+        
+        self.task7()
         
     def Quit(self):
         
