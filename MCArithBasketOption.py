@@ -32,7 +32,6 @@ class MCArithBasketOption(CFGeoBasketOption):
         self.m = m
         self.ctrl_var = ctrl_var
 
-
     """
     Args:
         num_randoms: The observation time in Mente Carlo Process
@@ -63,27 +62,23 @@ class MCArithBasketOption(CFGeoBasketOption):
 
         drift_1 = np.exp((self.r - 0.5 * self.sigma_1 ** 2) * self.T)
         drift_2 = np.exp((self.r - 0.5 * self.sigma_2 ** 2) * self.T)
-        
-        drift_11 = np.exp((self.r - 0.5 * self.sigma_1 ** 2) * dt)
-        drift_21 = np.exp((self.r - 0.5 * self.sigma_2 ** 2) * dt)
 
         arithPayoff = [0] * m
-        geoPayoff = [0] * m
+        geoPayoff_call = [0] * m
+        geoPayoff_put = [0] * m
 
         for i in range(m):
-
-            Spath_1 = None
-            Spath_2 = None
 
             #Bg[0] = Bg0
             #Ba[0] = 0.5*(Spath_1[0]+Spath_2[0])
 
-
+            # fix the initial state
+            s = i + 2*i
+            np.random.seed(s)
             Z_1 = np.random.normal(0, 1, 1)
             Z_2 = np.random.normal(0, 1, 1)
-            Spath_1 = self.s0_1*drift_1 * np.exp(self.sigma_1 * np.sqrt(self.T) * Z_1)
-            Spath_2 = self.s0_2*drift_2 * np.exp(self.sigma_2 * np.sqrt(self.T) * Z_2)
-            
+            S_1 = self.s0_1*drift_1 * np.exp(self.sigma_1 * np.sqrt(self.T) * Z_1)
+            S_2 = self.s0_2*drift_2 * np.exp(self.sigma_2 * np.sqrt(self.T) * Z_2)
             
             '''
             Spath_1 = [0]*50
@@ -102,67 +97,67 @@ class MCArithBasketOption(CFGeoBasketOption):
                 #Bg[j] = np.sqrt(Spath_1[j]*Spath_2[j])
             '''
             
-            Ba[i] = (1/2)*(Spath_1 + Spath_2) 
+            Ba[i] = (1/n)*(S_1 + S_2)
             ### Geometric mean
-            #geoMean = np.exp((1/m) * sum(np.log(Ba)))
-            #geoPayoff[i] = np.exp(-self.r*self.T) * max(geoMean-self.K, 0)
+            geoMean = np.exp((1/n) * (np.log(S_1) + np.log(S_2)))
+            geoPayoff_call[i] = np.exp(-self.r*self.T)*max(geoMean-self.K, 0)
+            geoPayoff_put[i] = np.exp(-self.r*self.T)*max(self.K-geoMean, 0)
 
             if i % 50 == 0:
                 print('[INFO] The {} path has been generated.'.format(i))
-                         
-        if self.option_type == "call":
-            for each in range(len(Ba)):
-                Ba[each] = Ba[each] - self.K
-            for each in range(len(Ba)):
-                if Ba[each]>0:
-                    Ba[each] = np.exp(-self.r*self.T)*Ba[each]
-                else:
-                    Ba[each]=0
-        
-        if self.option_type == "put":
-            for each in range(len(Ba)):
-                Ba[each] = self.K - Ba[each]
-            for each in range(len(Ba)):
-                if Ba[each]>0:
-                    Ba[each] = np.exp(-self.r*self.T)*Ba[each]
-                else:
-                    Ba[each]=0
+                 
+            if self.option_type == "call":
                 
-        arithPayoff = Ba
-        Pmean = float(np.mean(arithPayoff))+2.3
+                arithPayoff[i] = Ba[i] - self.K
+                if arithPayoff[i] > 0:
+                    arithPayoff[i] = np.exp(-self.r*self.T)*arithPayoff[i]
+                else:
+                    arithPayoff[i] = 0
+
+            elif self.option_type == "put":
+
+                arithPayoff[i] = self.K - Ba[i]
+                if arithPayoff[i] > 0:
+                    arithPayoff[i] = np.exp(-self.r*self.T)*arithPayoff[i]
+                else:
+                    arithPayoff[i] = 0
+                
         ### Standard Mente Carlo
-        #Pmean = np.mean(arithPayoff)
+        Pmean = float(np.mean(arithPayoff))
         Pstd = np.std(arithPayoff)
-        confmc = (Pmean-1.96*Pstd/np.sqrt(num_randoms), Pmean+1.96*Pstd/np.sqrt(num_randoms))
+        confmc = (Pmean-1.96*Pstd/np.sqrt(m), Pmean+1.96*Pstd/np.sqrt(m))
 
         if not self.ctrl_var:
             print('The {} basket option price using Mente Carlo WITHOUT control variate is {}'.format(self.option_type, Pmean))
-            return Pmean
+            print('The confidence interval is {}'.format(confmc))
+            return Pmean, confmc
         else:
             ### Control Variate
-            conXY = np.mean(np.multiply(arithPayoff, geoPayoff)) - (np.mean(arithPayoff) * np.mean(geoPayoff))
-            theta = conXY / np.var(geoPayoff)
+            conXY_call = np.mean(np.multiply(arithPayoff, geoPayoff_call)) - (np.mean(arithPayoff) * np.mean(geoPayoff_call))
+            theta_call = conXY_call / np.var(geoPayoff_call)
+            conXY_put = np.mean(np.multiply(arithPayoff, geoPayoff_put)) - (np.mean(arithPayoff) * np.mean(geoPayoff_put))
+            theta_put = conXY_put / np.var(geoPayoff_put)
 
             ### Control variate version
             if self.option_type == 'call':
                 # implement the closed-from formula for Geometric Mean Basket Call Option
                 geo_call = np.exp(-self.r * self.T) * (Bg0 * np.exp(muT) * N1 - self.K * N2)
-                Z = arithPayoff + theta * (geo_call - geoPayoff)
+                Z = arithPayoff + theta_call * (geo_call - geoPayoff_call)
 
             elif self.option_type == 'put':
                 # implement the closed-from formula for Geometric Mean Basket Put Option
                 geo_put = np.exp(-self.r * self.T) * (self.K * N2_ - Bg0 * np.exp(muT) * N1_)
-                Z = arithPayoff + theta * (geo_put - geoPayoff)
+                Z = arithPayoff + theta_put * (geo_put - geoPayoff_put)
 
             Zmean = np.mean(Z)
             Zstd = np.std(Z)
-            confmc = (Zmean-1.96 * Zstd / np.sqrt(num_randoms), Zmean+1.96*Zstd/np.sqrt(num_randoms))
+            confmc = (Zmean-1.96 * Zstd / np.sqrt(m), Zmean+1.96*Zstd/np.sqrt(m))
             print('The {} option price using Mente Carlo WITH control variate is {}'.format(self.option_type, Zmean))
-            return Zmean
-
+            print('The confidence interval is {}'.format(confmc))
+            return Zmean, confmc
 
 if __name__ == '__main__':
     option = MCArithBasketOption(s0_1=100, s0_2=100, sigma_1=0.3, sigma_2=0.3,
                  r=0.05, T=3, K=100, rho=0.5, option_type='put', m=100000,
-                 ctrl_var=False)
+                 ctrl_var=True)
     option.pricing(num_randoms=50)

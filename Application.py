@@ -664,8 +664,9 @@ class Application:
                                      sigma_2=self.sigma_2.get(), r=self.r.get(), T=self.T.get(), K=self.K.get(),
                                      rho=self.rho.get(),option_type=self.option_type.get(),
                                      ctrl_var=self.ctrl_var.get())
-        result = option.pricing(num_randoms=self.m.get())
+        result, interval = option.pricing(num_randoms=self.m.get())
         self.logs.insert(END, "The put option premium is: {}\n".format(result))
+        self.logs.insert(END, "The confidence interval is: {}\n".format(interval))
         
     def run_task7(self):
         
