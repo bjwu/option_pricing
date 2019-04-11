@@ -129,9 +129,7 @@ class MCArithAsianOption:
             print('The {} option price using Mente Carlo WITH control variate is {}'.format(self.option_type, Zmean))
             return Zmean, confmc
 
-'''
 if __name__ == '__main__':
     option = MCArithAsianOption(s0=100, sigma=0.3, r=0.05, T=3, K=100,
                  n=100, m=100000, option_type='call', ctrl_var=False)
     option.pricing()
-'''
