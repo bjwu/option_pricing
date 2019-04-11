@@ -76,7 +76,9 @@ class MCArithBasketOption(CFGeoBasketOption):
             s = i + 2*i
             np.random.seed(s)
             Z_1 = np.random.normal(0, 1, 1)
-            Z_2 = np.random.normal(0, 1, 1)
+            # mu = 0, sigma = 1, X1, X2 are i.i.d
+            # Y1 = mu + sigmaX1, Y2 = mu + sigma(rhoX1 + sqrt(1-rho**2*X2))
+            Z_2 = self.rho*Z_1+np.sqrt(1-self.rho**2)*np.random.normal(0, 1, 1)
             S_1 = self.s0_1*drift_1 * np.exp(self.sigma_1 * np.sqrt(self.T) * Z_1)
             S_2 = self.s0_2*drift_2 * np.exp(self.sigma_2 * np.sqrt(self.T) * Z_2)
             
@@ -158,6 +160,6 @@ class MCArithBasketOption(CFGeoBasketOption):
 
 if __name__ == '__main__':
     option = MCArithBasketOption(s0_1=100, s0_2=100, sigma_1=0.3, sigma_2=0.3,
-                 r=0.05, T=3, K=100, rho=0.5, option_type='put', m=100000,
+                 r=0.05, T=3, K=100, rho=0.5, option_type='call', m=100000,
                  ctrl_var=True)
     option.pricing(num_randoms=50)
