@@ -157,9 +157,11 @@ class MCArithBasketOption(CFGeoBasketOption):
             print('The {} option price using Mente Carlo WITH control variate is {}'.format(self.option_type, Zmean))
             print('The confidence interval is {}'.format(confmc))
             return Zmean, confmc
-
+'''
 if __name__ == '__main__':
     option = MCArithBasketOption(s0_1=100, s0_2=100, sigma_1=0.3, sigma_2=0.3,
                  r=0.05, T=3, K=100, rho=0.5, option_type='call', m=100000,
                  ctrl_var=True)
     option.pricing(num_randoms=50)
+'''
+    
