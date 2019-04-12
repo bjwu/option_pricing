@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 
 
-# In[10]:
+# Definition of the function to calculate American option price:
 class BiTreeAmericanOption():
 
     def BiTreeAmericanOption(self, S0, sigma, r, T, K, N, option = 'call'):
@@ -24,12 +21,12 @@ class BiTreeAmericanOption():
         deltat = float(T)/N
         u = np.exp(sigma * np.sqrt(deltat))
         d = np.exp(-sigma * np.sqrt(deltat))
-        #p: probability
+        #p: probability of u
         p = (np.exp(r * deltat) - d) / (u - d)
         #DF: discount factor
         DF = np.exp(-r * deltat)
     
-        #to work with vector we need to init the arrays using numpy
+        #to work with vector we need to init the arrays using numpy, initialize the option price array:
         fs =  np.asarray([0.0 for i in range(N + 1)])    
         #we need the stock tree for calculations of expiration values
         fs2 = np.asarray([(S0 * u**j * d**(N - j)) for j in range(N + 1)])
@@ -46,12 +43,12 @@ class BiTreeAmericanOption():
         for i in range(N-1, -1, -1):
         
             fs[:-1]= DF * (p * fs[1:] + (1-p) * fs[:-1])
-            fs2[:]=fs2[:]*u
+            fs2[:]=fs2[:]*u  # equals to fs2[:] / d
         
             if option == 'call':
                     fs[:]=np.maximum(fs[:],fs2[:]-fs3[:])
             if option == 'put':
                     fs[:]=np.maximum(fs[:],-fs2[:]+fs3[:])
                 
-        # print fs
+        # Print the calculated American option price at time 0:
         return fs[0]
