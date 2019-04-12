@@ -73,7 +73,7 @@ class MCArithBasketOption(CFGeoBasketOption):
             #Ba[0] = 0.5*(Spath_1[0]+Spath_2[0])
 
             # fix the initial state
-            s = i + 2*i
+            s = i
             np.random.seed(s)
             Z_1 = np.random.normal(0, 1, 1)
             # mu = 0, sigma = 1, X1, X2 are i.i.d
